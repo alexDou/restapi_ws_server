@@ -20,16 +20,15 @@ wss.on('connection', (ws) => {
 const machineApp = express.Router();
 
 machineApp.post('/unlock/cc', (req, res) => {
-    console.log('unclock cc received');
-    sock.send(createMessage('UNLOCK_SCREEN', 'cc'));
+    sock.send(createMessage('UNLOCK_SCREEN', false));
     res.end();
 });
 machineApp.post('/unlock/cclite', (req, res) => {
-    sock.send(createMessage('UNLOCK_SCREEN', 'ccl'));
+    sock.send(createMessage('UNLOCK_SCREEN', false));
     res.end();
 });
 machineApp.post('/lock', (req, res) => {
-    sock.send(createMessage('LOCK_SCREEN'));
+    sock.send(createMessage('LOCK_SCREEN', true));
     res.end();
 });
 machineApp.post('/message/oasis', (req, res) => {
@@ -37,14 +36,14 @@ machineApp.post('/message/oasis', (req, res) => {
     res.end();
 });
 machineApp.post('/message/blocked', (req, res) => {
-    sock.send(createMessage('BLOCKED'));
+    sock.send(createMessage('BLOCKED', 'blocked'));
     res.end();
 });
 
 app.use('/machineapp/ccl', machineApp);
 
 function createMessage(type, value = '') {
-    return JSON.stringify({ event, value });
+    return JSON.stringify({ type, value });
 }
 
 //start server
